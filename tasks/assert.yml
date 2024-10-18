@@ -1,0 +1,432 @@
+---
+
+- name: assert | Test tomcat_mirror
+  ansible.builtin.assert:
+    that:
+      - tomcat_mirror is defined
+      - tomcat_mirror is string
+      - tomcat_mirror is not none
+    quiet: yes
+
+- name: assert | Test tomcat_name
+  ansible.builtin.assert:
+    that:
+      - tomcat_name is defined
+      - tomcat_name is string
+      - tomcat_name is not none
+    quiet: yes
+
+- name: assert | Test tomcat_directory
+  ansible.builtin.assert:
+    that:
+      - tomcat_directory is defined
+      - tomcat_directory is string
+      - tomcat_directory is not none
+    quiet: yes
+
+- name: assert | Test tomcat_version
+  ansible.builtin.assert:
+    that:
+      - tomcat_version is defined
+      - tomcat_version is number
+      - tomcat_version in [ 7, 8, 9, 10 ]
+    quiet: yes
+
+- name: assert | Test tomcat_user
+  ansible.builtin.assert:
+    that:
+      - tomcat_user is defined
+      - tomcat_user is string
+      - tomcat_user is not none
+    quiet: yes
+
+- name: assert | Test tomcat_group
+  ansible.builtin.assert:
+    that:
+      - tomcat_group is defined
+      - tomcat_group is string
+      - tomcat_group is not none
+    quiet: yes
+
+- name: assert | Test tomcat_xms
+  ansible.builtin.assert:
+    that:
+      - tomcat_xms is defined
+      - tomcat_xms is string
+      - tomcat_xms is not none
+    quiet: yes
+
+- name: assert | Test tomcat_xmx
+  ansible.builtin.assert:
+    that:
+      - tomcat_xmx is defined
+      - tomcat_xmx is string
+      - tomcat_xmx is not none
+    quiet: yes
+
+- name: assert | Test tomcat_non_ssl_connector_port
+  ansible.builtin.assert:
+    that:
+      - tomcat_non_ssl_connector_port is defined
+      - tomcat_non_ssl_connector_port is number
+      - tomcat_non_ssl_connector_port >= -1
+      - tomcat_non_ssl_connector_port < 65536
+    quiet: yes
+
+- name: assert | Test tomcat_ssl_connector_port
+  ansible.builtin.assert:
+    that:
+      - tomcat_ssl_connector_port is defined
+      - tomcat_ssl_connector_port is number
+      - tomcat_ssl_connector_port >= -1
+      - tomcat_ssl_connector_port < 65536
+    quiet: yes
+
+- name: assert | Test tomcat_shutdown_port
+  ansible.builtin.assert:
+    that:
+      - tomcat_shutdown_port is defined
+      - tomcat_shutdown_port is number
+      - tomcat_shutdown_port >= -1
+      - tomcat_shutdown_port < 65536
+    quiet: yes
+
+- name: assert | Test tomcat_ajp_enabled
+  ansible.builtin.assert:
+    that:
+      - tomcat_ajp_enabled is defined
+      - tomcat_ajp_enabled is boolean
+    quiet: yes
+
+- name: assert | Test tomcat_ajp_port
+  ansible.builtin.assert:
+    that:
+      - tomcat_ajp_port is defined
+      - tomcat_ajp_port is number
+      - tomcat_ajp_port >= -1
+      - tomcat_ajp_port < 65536
+    quiet: yes
+
+- name: assert | Test port collisions occur
+  ansible.builtin.assert:
+    that:
+      - tomcat_non_ssl_connector_port != tomcat_ssl_connector_port
+      - tomcat_non_ssl_connector_port != tomcat_shutdown_port
+      - tomcat_non_ssl_connector_port != tomcat_ajp_port
+      - tomcat_ssl_connector_port != tomcat_shutdown_port
+      - tomcat_ssl_connector_port != tomcat_ajp_port
+      - tomcat_shutdown_port != tomcat_ajp_port
+    quiet: yes
+
+- name: assert | Test tomcat_jre_home
+  ansible.builtin.assert:
+    that:
+      - tomcat_jre_home is defined
+      - tomcat_jre_home is string
+      - tomcat_jre_home is not none
+    quiet: yes
+
+- name: assert | Test tomcat_service_state
+  ansible.builtin.assert:
+    that:
+      - tomcat_service_state is defined
+      - tomcat_service_state in [ "reloaded", "restarted", "started", "stopped" ]
+    quiet: yes
+
+- name: assert | Test tomcat_service_enabled
+  ansible.builtin.assert:
+    that:
+      - tomcat_service_enabled is defined
+      - tomcat_service_enabled is boolean
+    quiet: yes
+
+- name: assert | Test tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - tomcat_instances is defined
+      - tomcat_instances is iterable
+    quiet: yes
+
+- name: assert | Test tomcat_address
+  ansible.builtin.assert:
+    that:
+      - tomcat_address is defined
+      - tomcat_address is string
+      - tomcat_address is not none
+    quiet: yes
+
+- name: assert | Test tomcat_access_log_enabled
+  ansible.builtin.assert:
+    that:
+      - tomcat_access_log_enabled is defined
+      - tomcat_access_log_enabled is boolean
+    quiet: yes
+
+- name: assert | Test tomcat_access_log_directory
+  ansible.builtin.assert:
+    that:
+      - tomcat_access_log_directory is defined
+      - tomcat_access_log_directory is string
+      - tomcat_access_log_directory is not none
+    quiet: yes
+  when:
+    - tomcat_access_log_enabled
+
+- name: assert | Test tomcat_access_log_prefix
+  ansible.builtin.assert:
+    that:
+      - tomcat_access_log_prefix is defined
+      - tomcat_access_log_prefix is string
+      - tomcat_access_log_prefix is not none
+    quiet: yes
+  when:
+    - tomcat_access_log_enabled
+
+- name: assert | Test tomcat_access_log_suffix
+  ansible.builtin.assert:
+    that:
+      - tomcat_access_log_suffix is defined
+      - tomcat_access_log_suffix is string
+      - tomcat_access_log_suffix is not none
+    quiet: yes
+  when:
+    - tomcat_access_log_enabled
+
+- name: assert | Test tomcat_access_log_pattern
+  ansible.builtin.assert:
+    that:
+      - tomcat_access_log_pattern is defined
+      - tomcat_access_log_pattern is string
+      - tomcat_access_log_pattern is not none
+    quiet: yes
+  when:
+    - tomcat_access_log_enabled
+
+- name: assert | Test item.name in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.name is defined
+      - item.name is string
+      - item.name is match("^[a-zA-Z0-9_-]*$")
+    fail_msg: "Please use alphanumeric characters only."
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: assert | Test item.version in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.version is defined
+      - item.version is number
+      - item.version in [7, 8, 9, 10]
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.version is defined
+
+- name: assert | Test item.non_ssl_connector_port in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.non_ssl_connector_port is number
+      - item.non_ssl_connector_port >= -1
+      - item.non_ssl_connector_port < 65536
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.non_ssl_connector_port is defined
+
+- name: assert | Test item.ssl_connector_port in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.ssl_connector_port is number
+      - item.ssl_connector_port >= -1
+      - item.ssl_connector_port < 65536
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.ssl_connector_port is defined
+
+- name: assert | Test item.shutdown_port in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.shutdown_port is number
+      - item.shutdown_port >= -1
+      - item.shutdown_port < 65536
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.shutdown_port is defined
+
+- name: assert | Test item.ajp_enabled in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.ajp_enabled is boolean
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.ajp_enabled is defined
+
+- name: assert | Test item.ajp_port in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.ajp_port is number
+      - item.ajp_port >= -1
+      - item.ajp_port < 65536
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.ajp_port is defined
+
+- name: assert | Test item.address in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.address is defined
+      - item.address is string
+      - item.address is not none
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - tomcat_address is undefined
+
+- name: assert | Test item.java_opts in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.java_opts is iterable
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.java_opts is defined
+
+- name: assert | Test item.access_log_enabled in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.access_log_enabled is boolean
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.access_log_enabled is defined
+
+- name: assert | Test item.access_log_directory in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.access_log_directory is string
+      - item.access_log_directory is not none
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.access_log_directory is defined
+
+- name: assert | Test item.access_log_prefix in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.access_log_prefix is string
+      - item.access_log_prefix is not none
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.access_log_prefix is defined
+
+- name: assert | Test item.access_log_suffix in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.access_log_suffix is string
+      - item.access_log_suffix is not none
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.access_log_suffix is defined
+
+- name: assert | Test item.access_log_pattern in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.access_log_pattern is string
+      - item.access_log_pattern is not none
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.access_log_pattern is defined
+
+- name: assert | Test item.config_files in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.config_files is iterable
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.config_files is defined
+
+- name: assert | Test item.service_state in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.service_state in [ "reloaded", "restarted", "started", "stopped" ]
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.service_state is defined
+
+- name: assert | Test item.service_enabled in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.service_enabled is boolean
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.service_enabled is defined
+
+- name: assert | Test item.packet_size in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.packet_size is number
+      - item.packet_size > 0
+      - item.packet_size <= 65536
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.packet_size is defined
+
+- name: assert | Test item.ajp_secret in tomcat_instances
+  ansible.builtin.assert:
+    that:
+      - item.ajp_secret is string
+      - item.ajp_secret is not none
+    quiet: yes
+  loop: "{{ tomcat_instances }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.ajp_secret is defined
